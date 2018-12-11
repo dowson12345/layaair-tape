@@ -1,4 +1,4 @@
-declare module runtime {
+declare module TapeRuntime {
 
     let clickSound: string;
     let scaleTime: number;
@@ -36,17 +36,17 @@ declare module Tape {
         [key: string]: any
     }
 
-    /** startOptions */
-    interface startPayload {
-        mainPage: any;
+    /** StartPayload */
+    interface StartPayload {
+        mainPage?: any;
         commonRes?: { url: string, type: string }[];
         fileVersion?: string;
         onLoadProgress?: (progress: number) => void;
         onLoaded?: () => void;
     }
 
-    /** userinfoPayload */
-    interface userinfoPayload {
+    /** UserinfoPayload */
+    interface UserinfoPayload {
         platform: string,
         playerId: string,
         nickname: string,
@@ -58,23 +58,98 @@ declare module Tape {
         raw: obj
     }
 
+    /** ModalPayload */
+    interface ModalPayload {
+        title?: string,
+        content?: string,
+        showCancel?: boolean,
+        cancelText?: string,
+        cancelColor?: string,
+        confirmText?: string,
+        confirmColor?: string,
+        success?: (result: { cancel: boolean, confirm: boolean }) => void,
+        fail?: any;
+        complete?: any;
+    }
+
+    /** ToastPayload */
+    interface ToastPayload {
+        title: string,
+        image?: string,
+        icon?: 'success' | 'loading' | 'none',
+        duration?: number,
+        mask?: boolean,
+        success?: any,
+        fail?: any;
+        complete?: any;
+    }
+
+    /** LoadingPayload */
+    interface LoadingPayload {
+        title: string,
+        mask?: boolean,
+        success?: any,
+        fail?: any;
+        complete?: any;
+    }
+
+    /** AudioController */
+    interface AudioController {
+        readonly url: string;
+        readonly position: number;
+        readonly duration: number;
+        onPlay(callback: () => void): void;
+        onStop(callback: () => void): void;
+        onPause(callback: () => void): void;
+        onProgress(callback: (progress: { position: number, duration: number }) => void): void;
+        onComplete(callback: () => void): void;
+        isPaused(): void;
+        isPlaying(): void;
+        play(loops?: number): void
+        pause(): void;
+        resume(): void;
+        stop(): void;
+        destroy(): void;
+    }
+
     /** init for 2D */
     function init(width: number, height: number, ...options): void;
     /** init for 3D */
     function init3D(width: number, height: number, ...options): void;
     /** start */
-    function start(options: startPayload, callback?:() => void): void;
+    function start(options: StartPayload | null, onLoaded?: () => void): void;
     /** exit */
     function exit(): void;
 
+    /** showToast */
+    function showToast(params: ToastPayload): void;
+    /** hideToast */
+    function hideToast(): void;
+    /** showModal */
+    function showModal(params: ModalPayload): void;
+    /** showToast */
+    function showLoading(params?: LoadingPayload): void;
+    /** hideLoading */
+    function hideLoading(): void;
+    /** vibrateShort */
+    function vibrateShort(): void;
+    /** vibrateLong */
+    function vibrateLong(): void;
+
     /** bg */
     module bg {
-        /** getBgSprite */
-        function getBgSprite(): Laya.Sprite;
         /** setBgColor */
         function setBgColor(color: string): void;
         /** getBgColor */
         function getBgColor(): string;
+        /** setBgSkin */
+        function setBgSkin(skin: string): void;
+        /** getBgSkin */
+        function getBgSkin(): string;
+        /** setBgSizeGrid */
+        function setBgSizeGrid(sizeGrid: string): void;
+        /** getBgSizeGrid */
+        function getBgSizeGrid(): string;
     }
 
     /** screen */
@@ -93,14 +168,38 @@ declare module Tape {
         function getDesignHeight(): number;
     }
 
-    /** platform */
-    module platform {
+    /** audio */
+    module audio {
+        /** playMusic */
+        function playMusic(url: string, loops?: number): AudioController;
+        /** playSound */
+        function playSound(url: string, loops?: number): AudioController;
+        /** stopMusic */
+        function stopMusic(): void;
+        /** stopAll */
+        function stopAll(): void;
+        /** stopAllSound */
+        function stopAllSound(): void;
+    }
+
+    /** env */
+    module env {
         /** getVersion */
         function getAppVersion(): string;
         /** getVersion */
         function getVersion(): string;
+        /** isLayaApp */
+        function isLayaApp(): boolean;
+        /** isConchApp */
+        function isConchApp(): boolean;
         /** isBrowserApp */
         function isBrowserApp(): boolean;
+        /** sendMessageToPlatform */
+        function sendMessageToPlatform(params: obj, callback: (result: obj) => void): void;
+        /** isQQApp */
+        function isQQApp(): boolean;
+        /** execQQ */
+        function execQQ(func, ...options): any;
         /** isFacebookApp */
         function isFacebookApp(): boolean;
         /** execFB */
@@ -113,6 +212,8 @@ declare module Tape {
         function setDebug(debug: boolean): void;
         /** printDebug */
         function printDebug(message: any, ...options): void;
+        /** printError */
+        function printError(message: any, ...options): void;
         /** getEnv */
         function getEnv(): string;
         /** setEnv */
@@ -129,6 +230,8 @@ declare module Tape {
     module ad {
         /** isSupportedRewardedVideo */
         function isSupportedRewardedVideo(): boolean;
+        /** isPreloadRewardedVideoAd */
+        function isPreloadRewardedVideoAd(): boolean;
         /** setRewardedVideoAd */
         function configRewardedVideoAd(platform: string, adId: string): void;
         /** watchRewardedVideoAd */
@@ -149,12 +252,8 @@ declare module Tape {
         function onLaunch(callback: (options: { scene: string, query: obj, platform: string }) => void);
         /** onPause */
         function onPause(callback: () => void): void;
-        /** getUserInfo, use img for wechat: res/unpack/get_user_info.png */
-        function getUserInfo(callback: (userinfo: userinfoPayload) => void): void;
-        /** showGameClubButton */
-        function showGameClubButton(icon: string, x: number, y: number, w: number, h: number): void;
-        /** hideGameClubButton */
-        function hideGameClubButton(): void;
+        /** getUserInfo, use img for wechat: default_login.png */
+        function getUserInfo(callback: (userinfo: UserinfoPayload) => void, imageUrl?: string): void;
     }
 
     /** rank */
@@ -171,6 +270,38 @@ declare module Tape {
         function showRank(ui: obj | obj[]): void;
         /** hideRank */
         function hideRank(): void;
+    }
+
+    /** other */
+    module other {
+        /** isSupportKefuConversation */
+        function isSupportKefuConversation(): boolean;
+        /** openKefuConversation */
+        function openKefuConversation(options?: { sessionFrom?: string, showMessageCard?: boolean, sendMessageTitle?: string, sendMessagePath?: string, sendMessageImg?: string }): void;
+        /** isSupportClubButton */
+        function isSupportClubButton(): boolean;
+        /** showClubButton */
+        function showClubButton(icon: string, x: number, y: number, w: number, h: number): void;
+        /** hideClubButton */
+        function hideClubButton(): void;
+    }
+
+    /** utils */
+    module utils {
+        /** randomUUID */
+        function randomUUID(): string;
+        /** randomNumber */
+        function randomNumber(minNum: number, maxNum: number): number;
+        /** randomNumber */
+        function randomInteger(minNum: number, maxNum: number): number;
+        /** randomArray */
+        function randomArray(source: any[], length?: number): any[];
+        /** randomArrayItem */
+        function randomArrayItem(source: any[]): any;
+        /** tryToObject */
+        function tryToObject(source): any;
+        /** anyToArray */
+        function anyToArray(source: any): any[];
     }
 
     /** navigator */
@@ -210,6 +341,10 @@ declare module Tape {
         static finish(): void;
         /** res */
         static res: { url: string, type: string }[];
+        /** num */
+        static num: number;
+        /** single */
+        static single: boolean;
 
         /** page */
         protected page: any;
@@ -248,9 +383,9 @@ declare module Tape {
         /** activity on next page load progress */
         protected onNextProgress?(progress: number): void;
         /** redirectTo */
-        protected redirectTo(page, params?: any): void;
+        protected redirectTo(page, params?: any, action?: () => void, single?: boolean): void;
         /** navigate */
-        protected navigate(page, params?: any, action?: () => void): void;
+        protected navigate(page, params?: any, action?: () => void, single?: boolean): void;
         /** finish self */
         protected back(): void;
         /** finish activity */

@@ -13,6 +13,8 @@ export default class Activity extends ui {
     }
 
     static res = [];
+    static num = 0;
+    static single = false;
 
     public page = null;
     public params = {};
@@ -31,8 +33,8 @@ export default class Activity extends ui {
 
     constructor(options) {
         super(() => { this.back(); });
-        this.width = screen.getWidth();
-        this.height = screen.getHeight();
+        this.width = screen.getDesignWidth();
+        this.height = screen.getDesignHeight();
         this.params = Object.assign({}, options.params || {});
         this.page = options.page;
     }
@@ -41,14 +43,15 @@ export default class Activity extends ui {
     /// navigator function
     //////////////////////////
 
-    redirectTo(page, params = {}) {
+    redirectTo(page, params = {}, action = null, single = false) {
         this.navigate(page, params, () => {
             this.back();
-        });
+            action && action();
+        }, single);
     }
 
-    navigate(page, params = {}, action = null) {
-        NavStack.navigate(page, params, action);
+    navigate(page, params = {}, action = null, single = false) {
+        NavStack.navigate(page, params, action, single);
     }
 
     back() {

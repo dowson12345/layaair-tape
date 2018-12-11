@@ -5,22 +5,21 @@ export interface IInit {
     onLoadProgress(progress): void;
 }
 
+export interface IApp {
+    getUserInfo(callback: (userinfo: object) => void, imageUrl?: string): void;
+    onPause(callback: () => void): void;
+    onLaunch(callback: (options: object) => void);
+}
+
 export interface IAd {
     isSupportedRewardedVideoAd(): boolean;
+    isPreloadRewardedVideoAd(): boolean;
     configRewardedVideoAd(platform: string, adId: string): void;
     watchRewardedVideoAd(onWatch?: () => void, onCancal?: () => void, onError?: (error: any) => void): void;
     isSupportedBannerAd(): boolean;
     configBannerAd(platform: string, adId: string): void;
     showBannerAd(x: number, y: number, w: number, h: number, onError?: (error: any) => void): void;
     hideBannerAd(): void;
-}
-
-export interface IApp {
-    onPause(callback: () => void): void;
-    onLaunch(callback: (options: object) => void);
-    getUserInfo(callback: (userinfo: object) => void): void;
-    showGameClubButton(icon: string, x: number, y: number, w: number, h: number): void;
-    hideGameClubButton(): void;
 }
 
 export interface IRank {

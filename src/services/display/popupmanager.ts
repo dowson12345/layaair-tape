@@ -35,9 +35,10 @@ function showPopup(popup, params = null, onHide = null) {
     } else {
         _popups[popup] = [view];
     }
-    UIMgr.addMainLayer(view);
+    UIMgr.addViewToMainLayer(view);
+    view.onShow && view.onShow();
     _showAnimPopup(view, () => {
-        view.onShow && view.onShow();
+        view.isShow = true;
     });
 }
 

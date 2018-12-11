@@ -1,25 +1,51 @@
-# layaair-tape 3.x
+# layaair-tape
 > A layaair game library
 
-### Install
+### Usage
+
+#### 1.install
 ```
 > npm install layaair-tape
 ```
 
-### Use
-
+#### 2.require
 ```js
 require('layaair-tape');
 ```
 
-OR
+or
 
 ```html
 <!-- include tape library -->
 <script src="../node_modules/layaair-tape/dist/tape.js"></script>
 ```
 
-### Development 
+### CMD
+```
+> layaair-tape
+  Usage: layaair-tape [options]
+    --input            input dir
+    --output           output dir
+    --platform         [Optional] h5 || wechat || qq || facebook || android def: h5
+    --env              [Optional] development || production(prod)
+    --index            [Optional] index.html file def: index.html
+    --version          [Optional] version code def: read package.json
+    --buildnum         [Optional] version build num def: 0
+    --jsfile           [Optional] jsfile def: code.js
+    --appid            [Optional] app id
+    --projectname      [Optional] project name
+    --packagename      [Optional] package name
+    --orientation      [Optional] orientation
+    --pngquality       [Optional] png quality def: 65-80
+    --zip              [Optional] [bool] zip build.zip
+    --imgmin           [Optional] [bool] use imagemin
+    --min              [Optional] [bool] uglify js
+    --publish          [Optional] [bool] publish project
+    --force            [Optional] [bool] ignore .lock file
+    --x                [Optional] show this help
+```
+
+### Development
 * make sure latest `node.js` installed
 * install dependnecies by: `npm install`
 * start development by: `npm start`

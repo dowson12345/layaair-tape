@@ -39,17 +39,33 @@ if (typeof GameGlobal !== 'undefined') {
     polyfillGlobal = GameGlobal
 } else {
     polyfillGlobal = window || {
-        setTimeout: (...params) => {
-            return setTimeout(...params);
+        setTimeout: (callback, timeout) => {
+            if (BK && BK.Director) {
+                let obj = {};
+                BK.Director.ticker.setTimeout(callback, timeout, obj);
+                return obj;
+            }
+            return setTimeout(callback, timeout);
         },
-        setInterval: (...params) => {
-            return setInterval(...params);
+        setInterval: (callback, timeout) => {
+            if (BK && BK.Director) {
+                let obj = {};
+                BK.Director.ticker.setInterval(callback, timeout, obj);
+                return obj;
+            }
+            return setInterval(callback, timeout);
         },
-        clearTimeout: (...params) => {
-            return clearTimeout(...params);
+        clearTimeout: (target) => {
+            if (BK && BK.Director) {
+                return BK.Director.ticker.removeTimeout(target);
+            }
+            return clearTimeout(target);
         },
-        clearInterval: (...params) => {
-            return clearInterval(...params);
+        clearInterval: (target) => {
+            if (BK && BK.Director) {
+                return BK.Director.ticker.removeInterval(target);
+            }
+            return clearInterval(target);
         }
     };
 }
@@ -64,16 +80,17 @@ if (typeof window === 'undefined') {
     window.GameGlobal = window;
 }
 
-// wx
-if (typeof wx === 'undefined') {
-    window.wx = { isMock: true };
-} else {
-    window.wx = wx;
+// FBInstant
+if (typeof FBInstant !== 'undefined') {
+    window.FBInstant = FBInstant;
 }
 
-// FBInstant
-if (typeof FBInstant === 'undefined') {
-    window.FBInstant = { isMock: true };
-} else {
-    window.FBInstant = FBInstant;
+// BK
+if (typeof BK !== 'undefined') {
+    window.BK = BK;
+}
+
+// wx
+if (typeof wx !== 'undefined') {
+    window.wx = wx;
 }

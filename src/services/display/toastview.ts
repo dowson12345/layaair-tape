@@ -14,7 +14,7 @@ export default class ToastView extends ui {
 
     public toast;
     public params;
-    public duration = 500;
+    public duration = 200;
     public displayDuration = 1000;
     public easeIn = null;
     public easeOut = null;
@@ -25,8 +25,8 @@ export default class ToastView extends ui {
 
     constructor() {
         super(() => { this.hide() });
-        this.width = screen.getWidth();
-        this.height = screen.getHeight();
+        this.width = screen.getDesignWidth();
+        this.height = screen.getDesignHeight();
     }
 
     public hide() {

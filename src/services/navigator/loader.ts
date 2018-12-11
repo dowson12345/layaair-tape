@@ -35,6 +35,7 @@ export default class extends Laya.Component {
             page: this._options.page,
             params: this._options.params
         });
+        this._options.page.num++;
     }
 
     _onLoaded() {
@@ -54,7 +55,7 @@ export default class extends Laya.Component {
         this._activity.onNextProgress && this._activity.onNextProgress(progress);
     }
 
-    canFinish(page, activity) {
+    filter(page, activity) {
         if (page === this._options.page) {
             return !activity || activity === this._activity;
         }
@@ -102,6 +103,7 @@ export default class extends Laya.Component {
     }
 
     exit() {
+        this._options.page.num--;
         this._activity.onDestroy && this._activity.onDestroy();
         this.destroy();
     }
